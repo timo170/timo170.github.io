@@ -43,30 +43,21 @@
 
     // Funcție pentru scrierea datelor în Firebase
     function writeData() {
-        firebase.database().ref('test_data').set({
-          username: "Timo",
-          email: "timo@example.com"
-        })
-        .then(() => {
-          alert("Datele au fost scrise cu succes!");
-        })
-        .catch((error) => {
-          console.error("Eroare la scrierea datelor: ", error);
-        });
-      }
+  firebase.database().ref('path/to/data').set({
+    username: "Timo",
+    email: "timo@example.com"
+  });
+}
+
 
       // Funcție pentru citirea datelor din Firebase
       function readData() {
-        firebase.database().ref('test_data').once('value')
-        .then((snapshot) => {
-          const data = snapshot.val();
-          document.getElementById("output").innerText = 
-              `Utilizator: ${data.username}, Email: ${data.email}`;
-        })
-        .catch((error) => {
-          console.error("Eroare la citirea datelor: ", error);
-        });
-      }
+  firebase.database().ref('path/to/data').on('value', (snapshot) => {
+    const data = snapshot.val();
+    console.log(data);
+  });
+}
+
   </script>
 </body>
 </html>
