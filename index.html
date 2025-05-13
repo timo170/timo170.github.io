@@ -1,87 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ro">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Testează Firebase</title>
+    <title>🎁 Cadou pentru tine</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <h1>Testează Firebase</h1>
-    
-    <!-- Formular pentru introducerea datelor -->
-    <form id="dataForm">
-        <label for="username">Nume Utilizator:</label>
-        <input type="text" id="username" required>
-        <br>
-        <label for="email">Email:</label>
-        <input type="email" id="email" required>
-        <br>
-        <button type="submit">Scrie Date</button>
-    </form>
 
-    <!-- Buton pentru citirea datelor din Firebase -->
-    <button onclick="readData()">Citește Date</button>
-    
-    <!-- Div pentru afișarea datelor citite -->
-    <div id="output"></div>
+    <!-- Muzica -->
+    <audio id="bg-music" loop>
+        <source src="muzica.mp3" type="audio/mpeg">
+        Browserul tău nu suportă audio.
+    </audio>
 
-    <!-- Firebase SDK -->
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script type="module"  src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
-    <script type="module" src="index.html"></script>
+    <!-- Ecran de început -->
+    <div id="start-screen" class="container fade-in">
+        <h2>🎵 Ești gata?</h2>
+        <p>Apasă pe buton și începe aventura 🎉</p>
+        <button onclick="startExperience()">Începem!</button>
+    </div>
 
+    <!-- Întrebări -->
+    <div id="main-content" class="container fade-in" style="display:none;">
+        <h1>🎉 La mulți ani! 🎉</h1>
+        <p>Răspunde corect la aceste două întrebări și descoperă cadoul tău:</p>
+
+        <div class="input-group">
+            <label>🧠 Cum mă poreclești?</label>
+            <input type="text" id="answer1" placeholder="Scrie răspunsul aici">
+        </div>
+
+        <div class="input-group">
+            <label>📆 În ce lună ne-am cunoscut?</label>
+            <input type="text" id="answer2" placeholder="Scrie răspunsul aici">
+        </div>
+
+        <button onclick="checkAnswers()">🎁 Descoperă cadoul</button>
+
+        <p id="error-msg" class="error hidden">Hmm... mai încearcă!</p>
+    </div>
 
     <script>
-        import { initializeApp } from "firebase/app";
-        import { getAnalytics } from "firebase/analytics";
-      // Configurare Firebase SDK
-      const firebaseConfig = {
-        apiKey: "AIzaSyA719UAKt0J2u9j8yXRVsXzxPVvHZYlwn8",
-        authDomain: "first-website-e9831.firebaseapp.com",
-        databaseURL: "https://first-website-e9831-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "first-website-e9831",
-        storageBucket: "first-website-e9831.appspot.com",
-        messagingSenderId: "872770905518",
-        appId: "1:872770905518:web:297f103579f6a68524d43f",
-        measurementId: "G-QH26JHXTRD"
-      };
+        // Normalizează textul: fără spații, fără diacritice, tot cu litere mici
+        function normalize(text) {
+            return text.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        }
 
-      // Inițializare Firebase
-      const app = firebase.initializeApp(firebaseConfig);
-      const database = firebase.database();
+        function startExperience() {
+            const audio = document.getElementById("bg-music");
+            audio.play().catch(() => {
+                console.log("Autoplay blocat — așteaptă interacțiunea utilizatorului.");
+            });
 
-      // Funcție pentru scrierea datelor în Firebase
-      document.getElementById('dataForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Previne reîncărcarea paginii
+            document.getElementById("start-screen").style.display = "none";
+            document.getElementById("main-content").style.display = "block";
+        }
 
-        const username = document.getElementById('username').value;
-        const email = document.getElementById('email').value;
+        function checkAnswers() {
+            const ans1 = normalize(document.getElementById("answer1").value);
+            const ans2 = normalize(document.getElementById("answer2").value);
 
-        firebase.database().ref('test_data').set({
-          username: username,
-          email: email
-        })
-        .then(() => {
-          alert("Datele au fost scrise cu succes!");
-          document.getElementById('dataForm').reset(); // Resetează formularul
-        })
-        .catch((error) => {
-          console.error("Eroare la scrierea datelor: ", error);
-        });
-      });
-
-      // Funcție pentru citirea datelor din Firebase
-      function readData() {
-        firebase.database().ref('test_data').once('value')
-        .then((snapshot) => {
-          const data = snapshot.val();
-          document.getElementById("output").innerText = 
-              `Utilizator: ${data.username}, Email: ${data.email}`;
-        })
-        .catch((error) => {
-          console.error("Eroare la citirea datelor: ", error);
-        });
-      }
+            // Răspunsurile corecte – le poți modifica după caz
+            if (ans1 === "timixxx" && ans2 === "martie") {
+                window.location.href = "capsula.html";
+            } else {
+                document.getElementById("error-msg").classList.remove("hidden");
+            }
+        }
     </script>
 </body>
+
 </html>
